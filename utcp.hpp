@@ -6,6 +6,7 @@
 #define VFORCE_SYNCTCPSERVER_HPP
 
 #include <sstream>
+#include <iomanip>
 #include <boost/asio.hpp>
 
 namespace utcp {
@@ -39,7 +40,7 @@ class Message {
     auto data_size = s.size();
     std::stringstream ss;
     ss << std::setw(length_of_size) << std::setfill('0') << data_size;
-    header_ = ss.str() + "000";
+    header = ss.str() + "000";
     data = s;
   }
 

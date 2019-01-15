@@ -9,6 +9,7 @@
 #include <cmath>
 #include <Eigen/Eigen>
 #include <opencv2/opencv.hpp>
+#include "utils.hpp"
 
 namespace cvh {
 
@@ -64,7 +65,7 @@ static cv::Mat polygon2mask(const std::vector<cv::Point> &points) {
  * @param mask uchar mat
  * @param color random rgb color
  */
-void apply_mask(cv::Mat &img, const cv::Mat &mask, const cv::Scalar &color) {
+static void apply_mask(cv::Mat &img, const cv::Mat &mask, const cv::Scalar &color) {
   assert(img.size == mask.size);
   float alpha = 0.5;
   for (int y = 0; y < mask.rows; ++y) {
@@ -82,7 +83,7 @@ void apply_mask(cv::Mat &img, const cv::Mat &mask, const cv::Scalar &color) {
 /**
  * draw a label on image
  */
-void put_label(cv::Mat &img, const std::string &label, const cv::Point &p, const cv::Scalar &color) {
+inline void put_label(cv::Mat &img, const std::string &label, const cv::Point &p, const cv::Scalar &color) {
   int fontface = cv::FONT_HERSHEY_SIMPLEX;
   double scale = 0.4;
   int thickness = 1;
@@ -98,7 +99,7 @@ void put_label(cv::Mat &img, const std::string &label, const cv::Point &p, const
  * @param depth_file save file name
  * @param depth_meter depth in meter Mat
  */
-void write_depth(const std::string &depth_file, const cv::Mat &depth_meter) {
+static void write_depth(const std::string &depth_file, const cv::Mat &depth_meter) {
   cv::Mat depth_mat(depth_meter.size(), CV_16UC1);
   for (int y = 0; y < depth_mat.rows; y++)
     for (int x = 0; x < depth_mat.cols; x++) {
@@ -117,7 +118,7 @@ void write_depth(const std::string &depth_file, const cv::Mat &depth_meter) {
  * @param depth_file read file name
  * @return depth in meter mat
  */
-cv::Mat read_depth(const std::string &depth_file) {
+static cv::Mat read_depth(const std::string &depth_file) {
   cv::Mat depth_mat = cv::imread(depth_file, CV_16UC1);
   cv::Mat depth_meter(depth_mat.size(), CV_32F);
   for (int y = 0; y < depth_mat.rows; ++y)

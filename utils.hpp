@@ -7,6 +7,10 @@
 
 #include <iostream>
 #include <chrono>
+#include <memory>
+#include <vector>
+#include <sstream>
+#include <iomanip>
 
 namespace utils {
 
@@ -82,25 +86,6 @@ inline std::string current_time_and_date(const std::string &format = "%Y-%m-%d_%
   return ss.str();
 }
 
-/**
- * cout vector
- * @tparam T
- * @param os
- * @param vec
- * @return
- */
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
-  const auto iter_begin = vec.begin();
-  const auto iter_end   = vec.end();
-  os << "[";
-  for (auto iter = iter_begin; iter != iter_end; ++iter) {
-    std::cout << ((iter != iter_begin) ? "," : "") << *iter;
-  }
-  os << "]";
-  return os;
-}
-
 template <typename timestep>
 class Timer {
  public:
@@ -126,6 +111,24 @@ class Timer {
   clock::time_point beg_;
 };
 
+}
+/**
+ * cout vector
+ * @tparam T
+ * @param os
+ * @param vec
+ * @return
+ */
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
+  const auto iter_begin = vec.begin();
+  const auto iter_end   = vec.end();
+  os << "[";
+  for (auto iter = iter_begin; iter != iter_end; ++iter) {
+    std::cout << ((iter != iter_begin) ? "," : "") << *iter;
+  }
+  os << "]";
+  return os;
 }
 
 #endif //CPP_ACCUMULATION_UTILS_HPP
