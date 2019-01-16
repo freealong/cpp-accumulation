@@ -130,25 +130,6 @@ static cv::Mat read_depth(const std::string &depth_file) {
   return depth_meter;
 }
 
-/**
- * load param from filestorage if name exist
- * @tparam T
- * @param fs
- * @param name
- * @param param
- * @return
- */
-template<typename T>
-inline bool load_param(const cv::FileStorage &fs, const std::string &name, T &param) {
-  if (fs[name].empty()) {
-    std::cout << "using default " << name << ": " << param << std::endl;
-    return false;
-  } else {
-    fs[name] >> param;
-    std::cout << "load " << name << ": " << param << std::endl;
-    return true;
-  }
-}
 
 /**
  * make angle between [-pi, pi)
