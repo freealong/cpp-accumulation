@@ -95,6 +95,30 @@ inline void put_label(cv::Mat &img, const std::string &label, const cv::Point &p
 }
 
 /**
+ * draw cube on image
+ * @tparam T
+ * @param img
+ * @param image_points
+ */
+static void draw_cube(cv::Mat &img, const std::vector<cv::Point> &image_points) {
+  assert(image_points.size() == 8);
+  // draw 0-4, 1-5, 2-6, 3-7 lines
+  for (size_t i = 0; i < 4; ++i) {
+    cv::line(img, image_points[i], image_points[i+4], {255, 0, 0}, 2);
+  }
+  // draw 0-1-3-2 loop
+  cv::line(img, image_points[0], image_points[1], {0, 255, 0}, 2);
+  cv::line(img, image_points[1], image_points[3], {0, 255, 0}, 2);
+  cv::line(img, image_points[3], image_points[2], {0, 255, 0}, 2);
+  cv::line(img, image_points[2], image_points[0], {0, 255, 0}, 2);
+  // draw 4-5-7-6 loop
+  cv::line(img, image_points[4], image_points[5], {0, 0, 255}, 2);
+  cv::line(img, image_points[5], image_points[7], {0, 0, 255}, 2);
+  cv::line(img, image_points[7], image_points[6], {0, 0, 255}, 2);
+  cv::line(img, image_points[6], image_points[4], {0, 0, 255}, 2);
+}
+
+/**
  * write depth in meter into visualized png picture
  * @param depth_file save file name
  * @param depth_meter depth in meter Mat
