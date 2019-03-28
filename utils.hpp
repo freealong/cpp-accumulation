@@ -14,6 +14,11 @@
 
 namespace utils {
 
+template <typename T>
+inline T clamp(T val, T lo, T hi) {
+  return val < lo ? lo : val > hi ? hi : val;
+}
+
 /**
  * format string using c style
  * @tparam Args

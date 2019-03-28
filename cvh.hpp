@@ -90,7 +90,7 @@ inline void put_label(cv::Mat &img, const std::string &label, const cv::Point &p
   int baseline = 0;
 
   cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
-  cv::rectangle(img, p + cv::Point(0, baseline), p + cv::Point(text.width, -text.height), CV_RGB(0, 0, 0), CV_FILLED);
+  cv::rectangle(img, p + cv::Point(0, baseline), p + cv::Point(text.width, -text.height), CV_RGB(0, 0, 0), cv::FILLED);
   cv::putText(img, label, p, fontface, scale, color, thickness, 8);
 }
 
@@ -132,7 +132,7 @@ static void write_depth(const std::string &depth_file, const cv::Mat &depth_mete
       depth_mat.at<unsigned short>(y, x) = depth_short;
     }
   std::vector<int> compression_params;
-  compression_params.emplace_back(CV_IMWRITE_PNG_COMPRESSION);
+  compression_params.emplace_back(cv::IMWRITE_PNG_COMPRESSION);
   compression_params.emplace_back(9);
   cv::imwrite(depth_file, depth_mat, compression_params);
 }
@@ -154,6 +154,15 @@ static cv::Mat read_depth(const std::string &depth_file) {
   return depth_meter;
 }
 
+/**
+ * calculate iou between two rect
+ * @param rect1
+ * @param rect2
+ * @return
+ */
+inline float rect_iou(const cv::Rect &rect1, const cv::Rect &rect2) {
+  return static_cast<float>((rect1 & rect2).area()) / (rect1 | rect2).area();
+}
 
 /**
  * make angle between [-pi, pi)
