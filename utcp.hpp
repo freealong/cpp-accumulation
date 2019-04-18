@@ -78,7 +78,7 @@ class SyncTCP {
     boost::asio::read(*socket_, boost::asio::buffer(&(msg.header[0]), MsgT::length_of_header));
     auto data_size = static_cast<size_t >(std::stoi(msg.header.substr(0, MsgT::length_of_size)));
     if (data_size > 0) {
-      msg.data_.resize(data_size);
+      msg.data.resize(data_size);
       auto read_size = boost::asio::read(*socket_, boost::asio::buffer(&(msg.data[0]), data_size));
     }
   }
@@ -91,7 +91,7 @@ class SyncTCP {
   template <typename MsgT>
   void SendMsg(const MsgT &msg) {
     boost::asio::write(*socket_, boost::asio::buffer(&(msg.header[0]), MsgT::length_of_header));
-    if (not msg.data_.empty()) {
+    if (not msg.data.empty()) {
       auto send_size = boost::asio::write(*socket_, boost::asio::buffer(&(msg.data[0]), msg.data.size()));
     }
   }

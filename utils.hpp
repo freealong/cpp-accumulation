@@ -91,6 +91,16 @@ inline std::string current_time_and_date(const std::string &format = "%Y-%m-%d_%
   return ss.str();
 }
 
+inline bool startswith(std::string const &value, std::string const &start) {
+  if (start.size() > value.size()) return false;
+  return std::equal(start.begin(), start.end(), value.begin());
+}
+
+inline bool endswith(std::string const & value, std::string const & ending) {
+  if (ending.size() > value.size()) return false;
+  return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
 template <typename timestep>
 class Timer {
  public:
@@ -117,6 +127,7 @@ class Timer {
 };
 
 }
+
 /**
  * cout vector
  * @tparam T
