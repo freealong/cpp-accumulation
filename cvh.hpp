@@ -161,7 +161,8 @@ static cv::Mat read_depth(const std::string &depth_file) {
  * @return
  */
 inline float rect_iou(const cv::Rect &rect1, const cv::Rect &rect2) {
-  return static_cast<float>((rect1 & rect2).area()) / (rect1 | rect2).area();
+  auto overlap = static_cast<float>((rect1 & rect2).area());
+  return overlap / (rect1.area() + rect2.area() - overlap);
 }
 
 /**
