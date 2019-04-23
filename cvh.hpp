@@ -65,9 +65,8 @@ static cv::Mat polygon2mask(const std::vector<cv::Point> &points) {
  * @param mask uchar mat
  * @param color random rgb color
  */
-static void apply_mask(cv::Mat &img, const cv::Mat &mask, const cv::Scalar &color) {
+static void apply_mask(cv::Mat &img, const cv::Mat &mask, const cv::Scalar &color, float alpha = 0.5) {
   assert(img.size == mask.size);
-  float alpha = 0.5;
   for (int y = 0; y < mask.rows; ++y) {
     for (int x = 0; x < mask.cols; ++x) {
       if (mask.at<uchar>(y, x) > 0) {
