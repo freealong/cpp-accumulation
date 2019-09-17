@@ -169,12 +169,8 @@ inline float rect_iou(const cv::Rect &rect1, const cv::Rect &rect2) {
  * @param x input angle in radius
  * @return normalized angle
  */
-inline double normalize_angle(double x) {
-  x = fmod(x + M_PI, 2 * M_PI);
-  return x < 0 ? x += 2 * M_PI : x - M_PI;
-}
-
-inline float normalize_anlge(float x) {
+template <typename T>
+inline T normalize_angle(T x) {
   x = fmod(x + M_PI, 2 * M_PI);
   return x < 0 ? x += 2 * M_PI : x - M_PI;
 }
@@ -248,6 +244,15 @@ void matrix2pose(const Eigen::Matrix<T, 4, 4> &t,
   yaw = atan2(t(1, 0), t(0, 0));
 }
 
+template<typename T>
+std::vector<T> matrix2xyzquat(const Eigen::Matrix<T, 4, 4> &t) {
+  Eigen::Transform<T, 3, Eigen::Affine> affine;
+  affine.matrix() = t;
+  auto center = affine.translation();
+  auto rot_quat = Eigen::Quaternionf(affine.rotation());
+  return {center(0), center(1), center(2), rot_quat.x(), rot_quat.y(), rot_quat.z(), rot_quat.w()};
+}
+
 /**
  * calculate the angle between two vector
  * @tparam T
@@ -273,7 +278,6 @@ T included_angle(const std::vector<T> &vec1, const std::vector<T> &vec2, int dim
 
 }
 
-// operator function should out of namespace
 /**
  * Read Eigen Matrix from yaml file
  * @tparam T
@@ -284,14 +288,25 @@ T included_angle(const std::vector<T> &vec1, const std::vector<T> &vec2, int dim
  */
 template<typename T, int Row, int Col>
 static inline void operator>>(const cv::FileNode &node, Eigen::Matrix<T, Row, Col> &tf) {
-  if (node.empty())
-    tf = Eigen::Matrix<T, Row, Col>::Identity();
-  else {
-    auto it = node.begin();
-    for (auto y = 0; y < Row; ++y)
-      for (auto x = 0; x < Col; ++x)
-        tf(y, x) = static_cast<T>(*it++);
+  assert(node.size() == Row);
+  auto row_iter = node.begin();
+  for (auto y = 0; y < Row; ++y) {
+    assert((*row_iter).size() == Col);
+    auto col_iter = (*row_iter).begin();
+    for (auto x = 0; x < Col; ++x) {
+      tf(y, x) = static_cast<T>(*col_iter++);
+    }
+    row_iter++;
   }
 }
+
+/**
+ * Eigen Matrix cout format;
+ * [[1,  2,  3,  4],
+ *  [5,  6,  7,  8],
+ *  [9, 10, 11, 12],
+ *  [13, 14, 15, 16]]
+ */
+static Eigen::IOFormat IOF(0, 0, ",", ",\n", "[", "]", "[", "]");
 
 #endif //CPP_ACCUMULATION_CVH_HPP
