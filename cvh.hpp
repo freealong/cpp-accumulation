@@ -273,4 +273,25 @@ T included_angle(const std::vector<T> &vec1, const std::vector<T> &vec2, int dim
 
 }
 
+// operator function should out of namespace
+/**
+ * Read Eigen Matrix from yaml file
+ * @tparam T
+ * @tparam Row
+ * @tparam Col
+ * @param node
+ * @param tf
+ */
+template<typename T, int Row, int Col>
+static inline void operator>>(const cv::FileNode &node, Eigen::Matrix<T, Row, Col> &tf) {
+  if (node.empty())
+    tf = Eigen::Matrix<T, Row, Col>::Identity();
+  else {
+    auto it = node.begin();
+    for (auto y = 0; y < Row; ++y)
+      for (auto x = 0; x < Col; ++x)
+        tf(y, x) = static_cast<T>(*it++);
+  }
+}
+
 #endif //CPP_ACCUMULATION_CVH_HPP
